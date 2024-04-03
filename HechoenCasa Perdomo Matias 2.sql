@@ -96,6 +96,7 @@ WHERE p.Fecha >= CURRENT_DATE - INTERVAL 7 DAY;
 
 DELIMITER //
 CREATE FUNCTION TotalPedidosCliente(ClienteID INT) RETURNS INT
+deterministic
 BEGIN
     DECLARE cantidad_pedidos INT;
     SELECT COUNT(*) INTO cantidad_pedidos FROM Pedidos p WHERE p.ClienteID = ClienteID;
@@ -105,6 +106,7 @@ DELIMITER ;
 
 DELIMITER //
 CREATE FUNCTION CalcularTotalPedido(PedidoID INT) RETURNS INT
+deterministic
 BEGIN
     DECLARE total INT;
     SELECT SUM(Precio * Cantidad) INTO total
@@ -117,6 +119,7 @@ DELIMITER ;
 --Procedimientos
 DELIMITER //
 CREATE PROCEDURE ActualizarStock(IN ProductoID INT, IN Cantidad INT)
+deterministic
 BEGIN
     UPDATE Productos SET Stock = Stock - Cantidad WHERE ProductoID = ProductoID;
 END //;
@@ -128,6 +131,7 @@ CREATE PROCEDURE AgregarProducto(
     IN PrecioProducto INT,
     IN StockProducto INT
 )
+deterministic
 BEGIN
     INSERT INTO Productos (Nombre, Precio, Stock) VALUES (NombreProducto, PrecioProducto, StockProducto);
 END //
@@ -136,6 +140,7 @@ DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE EliminarProducto(IN ProductoID INT)
+deterministic
 BEGIN
     DELETE FROM DetallePedido WHERE ProductoID = ProductoID;
     DELETE FROM Productos WHERE ProductoID = ProductoID;
